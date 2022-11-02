@@ -263,6 +263,32 @@ int uECC_sign(const uint8_t *private_key,
               uint8_t *signature,
               uECC_Curve curve);
 
+/* uECC_SignatureContext structure.
+ *
+ */
+typedef struct uECC_SignatureContext {
+    uECC_Curve curve;
+    uint8_t s[32];
+    uint8_t k[32];
+    uint8_t * signature;
+} uECC_SignatureContext;
+
+/* uECC_sign_init function.
+ */
+int uECC_sign_init(
+              uECC_SignatureContext * signature_ctx,
+              const uint8_t *private_key,
+              uint8_t * signature,
+              uECC_Curve curve);
+
+/* uECC_sign_finish function.
+ */
+int uECC_sign_finish(
+              const uECC_SignatureContext *signature_ctx,
+              const uint8_t *message_hash,
+              unsigned hash_size);
+
+
 /* uECC_HashContext structure.
 This is used to pass in an arbitrary hash function to uECC_sign_deterministic().
 The structure will be used for multiple hash computations; each time a new hash
@@ -311,24 +337,6 @@ typedef struct uECC_HashContext {
     unsigned result_size; /* Hash function result size in bytes, eg 32 for SHA-256. */
     uint8_t *tmp; /* Must point to a buffer of at least (2 * result_size + block_size) bytes. */
 } uECC_HashContext;
-
-typedef struct uECC_SignatureContext {
-    uECC_Curve curve;
-    uint8_t * tmp;
-    uint8_t * signature;
-} uECC_SignatureContext;
-
-int uECC_sign_init(
-              uECC_SignatureContext * signature_ctx,
-              uint8_t * tmp,
-              const uint8_t *private_key,
-              uint8_t * signature,
-              uECC_Curve curve);
-
-int uECC_sign_finish(
-              const uECC_SignatureContext *signature_ctx,
-              const uint8_t *message_hash,
-              unsigned hash_size);
 
 /* uECC_sign_deterministic() function.
 Generate an ECDSA signature for a given hash value, using a deterministic algorithm

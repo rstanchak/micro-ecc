@@ -52,10 +52,9 @@ int main(int argc, char ** argv) {
 
     printf("\nUsing pre-compute ECDSA algorithm =========================\n");
     uECC_SignatureContext ctx;
-    uint8_t tmp[32 * 2] = {0}; // need 2x times curve nbits
 
     a = nanoticks();
-    if (!uECC_sign_init(&ctx, tmp, private, sig, curve)) {
+    if (!uECC_sign_init(&ctx, private, sig, curve)) {
         printf("uECC_sign_init() failed\n");
         return 1;
     }
