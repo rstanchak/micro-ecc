@@ -312,6 +312,24 @@ typedef struct uECC_HashContext {
     uint8_t *tmp; /* Must point to a buffer of at least (2 * result_size + block_size) bytes. */
 } uECC_HashContext;
 
+typedef struct uECC_SignatureContext {
+    uECC_Curve curve;
+    uint8_t * tmp;
+    uint8_t * signature;
+} uECC_SignatureContext;
+
+int uECC_sign_init(
+              uECC_SignatureContext * signature_ctx,
+              uint8_t * tmp,
+              const uint8_t *private_key,
+              uint8_t * signature,
+              uECC_Curve curve);
+
+int uECC_sign_finish(
+              const uECC_SignatureContext *signature_ctx,
+              const uint8_t *message_hash,
+              unsigned hash_size);
+
 /* uECC_sign_deterministic() function.
 Generate an ECDSA signature for a given hash value, using a deterministic algorithm
 (see RFC 6979). You do not need to set the RNG using uECC_set_rng() before calling
